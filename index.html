@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribals.io Raid Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group select, .input-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .results, .materials {
+            text-align: center;
+        }
+        .results p, .materials p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .raw-material {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .raw-material button {
+            display: block;
+            margin: auto;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tribals.io Raid Calculator</h1>
+        <div id="RAID CONFIGURATION">
+            <div class="input-group">
+                <label for="building_hp">Building HP</label>
+                <select id="building_hp">
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="15000">15000</option>
+                    <option value="25000">25000</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="ammo_type">Ammo Type</label>
+                <select id="ammo_type">
+                    <option value="25">PISTOL AMMO</option>
+                    <option value="30">MUSKET AMMO</option>
+                    <option value="50">EXPLOSIVE AMMO</option>
+                </select>
+            </div>
+            <button onclick="calculate()">Calcular</button>
+        </div>
+        <div class="results" id="results">
+            <!-- Resultados se mostrarán aquí -->
+        </div>
+        <div id="AMMO CRAFTING" style="display:none;">
+            <h2>AMMO CRAFTING</h2>
+            <p id="ammoTypeSubtitle"></p>
+            <p id="shotsRequired"></p>
+            <div class="materials" id="materials">
+                <!-- Materiales se mostrarán aquí -->
+            </div>
+        </div>
+        <div class="raw-material">
+            <h2>Check Raw Material for Crafting</h2>
+            <button onclick="checkRawMaterials()">Check Raw Material for Crafting</button>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const buildingHp = parseInt(document.getElementById('building_hp').value);
+            const ammoTypeElement = document.getElementById('ammo_type');
+            const ammoType = parseInt(ammoTypeElement.value);
+            const ammoTypeText = ammoTypeElement.options[ammoTypeElement.selectedIndex].text;
+
+            const shotsRequired = Math.ceil(buildingHp / ammoType);
+
+            let playersRequired;
+            if (buildingHp === 5000 && ammoType === 30) {
+                playersRequired = "6 Players";
+            } else if (buildingHp === 10000 && ammoType === 30) {
+                playersRequired = "12 Players";
+            } else if (buildingHp === 15000 && ammoType === 30) {
+                playersRequired = "18 Players";
+            } else if (buildingHp === 25000 && ammoType === 30) {
+                playersRequired = "28 Players";
+            } else if (buildingHp === 5000 && ammoType === 50) {
+                playersRequired = "3 Players";
+            } else if (buildingHp === 10000 && ammoType === 50) {
+                playersRequired = "6 Players";
+            } else if (buildingHp === 15000 && ammoType === 50) {
+                playersRequired = "13 Players";
+            } else if (buildingHp === 25000 && ammoType === 50) {
+                playersRequired = "19 Players";
+            } else {
+                playersRequired = "N/A";
+            }
+
+            document.getElementById('results').innerHTML = `
+                <p>Shots Required: ${shotsRequired}</p>
+                <p>Minimum Approx Players to Raid: ${playersRequired}</p>
+            `;
+
+            document.getElementById('AMMO CRAFTING').style.display = 'block';
+            document.getElementById('ammoTypeSubtitle').innerText = ammoTypeText;
+            document.getElementById('shotsRequired').innerText = `Shots Required: ${shotsRequired}`;
+
+            let materialsHTML = '';
+            if (ammoType === 25) {
+                materialsHTML = `
+                    <p>Iron Fragment: ${Math.ceil(shotsRequired * 4)}</p>
+                    <p>Gun Powder: ${Math.ceil(shotsRequired * 0.4)}</p>
+                `;
+            } else if (ammoType === 30) {
+                materialsHTML = `
+                    <p>Iron Fragment: ${Math.ceil(shotsRequired * 6)}</p>
+                    <p>Gun Powder: ${Math.ceil(shotsRequired * 0.6)}</p>
+                `;
+            } else if (ammoType === 50) {
+                materialsHTML = `
+                    <p>Iron Fragment: ${Math.ceil(shotsRequired * 20)}</p>
+                    <p>Gun Powder: ${Math.ceil(shotsRequired * 1)}</p>
+                    <p>Explosive Gun Powder: ${Math.ceil(shotsRequired * 0.2)}</p>
+                `;
+            }
+            document.getElementById('materials').innerHTML = materialsHTML;
+        }
+
+        function checkRawMaterials() {
+            // Lógica para revisar los materiales en bruto
+            alert("Función para revisar los materiales en bruto no implementada aún.");
+        }
+    </script>
+</body>
+</html>
